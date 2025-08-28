@@ -1,0 +1,76 @@
+/* Background for whole assistant */
+.gradient-bg {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+}
+
+/* Orange gradient for text */
+.orange-gradient-text {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Orange gradient background (e.g. for button or bubbles) */
+.orange-gradient {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+}
+
+/* Container */
+.assistant-container {
+  color: white;
+  width: 350px;
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat window */
+.chat-window {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 12px 0;
+  padding: 8px;
+}
+
+/* Message styles */
+.message {
+  margin: 6px 0;
+}
+.user-bubble {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  text-align: right;
+}
+.ai-bubble {
+  background: #2d2d2d;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* Input row */
+.input-row {
+  display: flex;
+  margin-top: 8px;
+}
+.input-row input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
+}
+.input-row button {
+  margin-left: 8px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
