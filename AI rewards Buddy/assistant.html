@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mukuru AI Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #070a11 0%, #0d1118 100%);
+      color: #e2e8f0;
+    }
+    
+    .orange-gradient {
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+    }
+    
+    .chat-container {
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    
+    /* Custom scrollbar */
+    .chat-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .chat-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    
+    .chat-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 107, 53, 0.6);
+      border-radius: 10px;
+    }
+    
+    .chat-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 107, 53, 0.8);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-up {
+      animation: slideUp 0.3s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .typing-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ff6b35;
+      margin: 0 3px;
+      opacity: 0.6;
+    }
+    
+    .typing-indicator:nth-child(1) {
+      animation: bounce 1s infinite 0.2s;
+    }
+    
+    .typing-indicator:nth-child(2) {
+      animation: bounce 1s infinite 0.4s;
+    }
+    
+    .typing-indicator:nth-child(3) {
+      animation: bounce 1s infinite 0.6s;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    /* Glow effect for the chat button */
+    .glow-button {
+      box-shadow: 0 0 5px rgba(255, 107, 53, 0.5),
+                  0 0 10px rgba(255, 107, 53, 0.3),
+                  0 0 15px rgba(255, 107, 53, 0.2),
+                  0 0 20px rgba(255, 107, 53, 0.1);
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .glow-button:hover {
+      box-shadow: 0 0 10px rgba(255, 107, 53, 0.6),
+                  0 0 20px rgba(255, 107, 53, 0.4),
+                  0 0 30px rgba(255, 107, 53, 0.3),
+                  0 0 40px rgba(255, 107, 53, 0.2);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Assistant Widget -->
+  <div id="assistant"
+       class="fixed bottom-6 right-6 w-80 bg-gray-800 rounded-2xl border border-gray-700 shadow-xl flex flex-col overflow-hidden hidden z-50">
+    
+    <!-- Header -->
+    <div class="orange-gradient text-white px-4 py-3 font-semibold flex justify-between items-center">
+      <span>Mukuru Rewards Assistant</span>
+      <button onclick="toggleAssistant()" class="text-white/80 hover:text-white transition">✖</button>
+    </div>
+
+    <!-- Chat Messages - Changed to dark gray -->
+    <div id="chat-box"
+         class="chat-container flex-1 p-4 space-y-3 text-sm bg-gray-800">
+      <div class="bg-gray-700 p-3 rounded-lg max-w-[85%] fade-in">
+        <p>Hello! 👋 I'm your Mukuru Rewards Assistant.</p>
+        <p class="mt-2">I can help you understand our rewards system. Ask me about:</p>
+        <ul class="list-disc list-inside mt-2 ml-2 text-orange-300">
+          <li>Earning points</li>
+          <li>Tiered points system</li>
+          <li>Redeeming points</li>
+          <li>Or anything else about rewards!</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <form onsubmit="sendMessage(event)"
+          class="flex p-3 border-t border-gray-700 bg-gray-800">
+      <input id="chat-input" type="text" placeholder="Type your message..."
+             class="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20" />
+      <button type="submit"
+              class="ml-2 px-4 py-2 orange-gradient rounded-xl text-white font-medium hover:opacity-90 transition">
+        Send
+      </button>
+    </form>
+  </div>
+
+  <!-- Show Assistant Button -->
+  <button id="show-assistant" onclick="showAssistant()" class="glow-button fixed bottom-6 right-6 w-14 h-14 orange-gradient rounded-full flex items-center justify-center shadow-lg transition-all duration-300">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+    </svg>
+  </button>
+
+  <script>
+    // Rule-based responses for the rewards system
+    function getAIResponse(userInput) {
+      const input = userInput.toLowerCase().trim();
+      
+      // Earning points responses
+      if (input.includes('earn') || input.includes('earning') || input.includes('get points') || 
+          input.includes('how to get') || input.includes('how do i get')) {
+        return "You can earn points by completing various actions like sending money, paying bills, or referring friends to Mukuru. Each action gives you a specific number of points that will be added to your account.";
+      }
+      
+      // Tiered points responses
+      if (input.includes('tier') || input.includes('level') || input.includes('bronze') || 
+          input.includes('silver') || input.includes('gold') || input.includes('status')) {
+        return "Our tiered system rewards you as you earn more points. You start at Bronze, then move to Silver, and finally Gold tier. Each tier offers progressively better rewards and benefits. Higher tiers may give you bonus points on transactions, exclusive rewards, and priority support.";
+      }
+      
+      // Redeemable points responses
+      if (input.includes('redeem') || input.includes('use points') || input.includes('spend points') || 
+          input.includes('airtime') || input.includes('voucher') || input.includes('health') ||
+          input.includes('reward') || input.includes('benefit')) {
+        return "Redeemable points are the points you can spend on rewards like airtime, vouchers, or health services. You can check your available redeemable points in your account dashboard and choose from various reward options based on your points balance.";
+      }
+      
+      // General rewards system questions
+      if (input.includes('point') || input.includes('system') || input.includes('how does it work') ||
+          input.includes('what is') || input.includes('explain')) {
+        return "The Mukuru rewards system lets you earn points for using our services. These points can be redeemed for various rewards. You move up through tiers (Bronze, Silver, Gold) as you earn more points, with each tier offering better benefits.";
+      }
+      
+      // Greetings
+      if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+        return "Hello! How can I help you with the Mukuru rewards system today?";
+      }
+      
+      // Thank you
+      if (input.includes('thank') || input.includes('thanks')) {
+        return "You're welcome! Is there anything else you'd like to know about our rewards system?";
+      }
+      
+      // Default response for unrecognized queries
+      return "I'm not sure I understand. I can help with questions about earning points, our tier system (Bronze, Silver, Gold), or redeeming points for rewards like airtime and vouchers. Could you ask in a different way?";
+    }
+    
+    // Show the assistant
+    function showAssistant() {
+      document.getElementById("assistant").classList.remove("hidden");
+      document.getElementById("show-assistant").classList.add("hidden");
+      document.getElementById("chat-input").focus();
+    }
+    
+    // Toggle the assistant visibility
+    function toggleAssistant() {
+      document.getElementById("assistant").classList.add("hidden");
+      document.getElementById("show-assistant").classList.remove("hidden");
+    }
+    
+    // Simulate typing effect
+    function showTypingIndicator() {
+      const chatBox = document.getElementById("chat-box");
+      const typingIndicator = document.createElement("div");
+      typingIndicator.id = "typing-indicator";
+      typingIndicator.className = "bg-gray-700 p-2 rounded-lg max-w-[30%]";
+      typingIndicator.innerHTML = `
+        <div class="flex items-center">
+          <div class="typing-indicator"></div>
+          <div class="typing-indicator"></div>
+          <div class="typing-indicator"></div>
+        </div>
+      `;
+      chatBox.appendChild(typingIndicator);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      
+      return typingIndicator;
+    }
+    
+    // Send message function
+    async function sendMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById("chat-input");
+      const chatBox = document.getElementById("chat-box");
+      
+      if (!input.value.trim()) return;
+      
+      // Show user message
+      const userMsg = document.createElement("div");
+      userMsg.className = "bg-orange-600/80 p-3 rounded-lg max-w-[85%] self-end ml-auto fade-in";
+      userMsg.innerText = input.value;
+      chatBox.appendChild(userMsg);
+      
+      // Save user message
+      const userInput = input.value;
+      input.value = "";
+      
+      // Clear input and scroll to bottom
+      chatBox.scrollTop = chatBox.scrollHeight;
+      
+      // Show typing indicator
+      const typingIndicator = showTypingIndicator();
+      
+      // Simulate AI thinking time
+      setTimeout(() => {
+        // Remove typing indicator
+        if (typingIndicator.parentNode) {
+          chatBox.removeChild(typingIndicator);
+        }
+        
+        // Get AI response
+        const aiResponse = getAIResponse(userInput);
+        
+        // Create AI message
+        const aiMsg = document.createElement("div");
+        aiMsg.className = "bg-gray-700 p-3 rounded-lg max-w-[85%] fade-in";
+        aiMsg.innerHTML = aiResponse;
+        
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 1000);
+    }
+    
+    // Add some suggested questions on first load
+    window.addEventListener('load', function() {
+      const suggestions = [
+        "How do I earn points?",
+        "What are the different tiers?",
+        "How can I redeem my points?"
+      ];
+      
+      const chatBox = document.getElementById("chat-box");
+      const suggestionContainer = document.createElement("div");
+      suggestionContainer.className = "mt-3 flex flex-wrap gap-2";
+      
+      suggestions.forEach(suggestion => {
+        const button = document.createElement("button");
+        button.className = "text-xs bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-400/30 rounded-full px-3 py-1 transition";
+        button.textContent = suggestion;
+        button.addEventListener('click', () => {
+          document.getElementById('chat-input').value = suggestion;
+          sendMessage(new Event('click'));
+        });
+        suggestionContainer.appendChild(button);
+      });
+      
+      chatBox.appendChild(suggestionContainer);
+    });
+    
+    // Close assistant when clicking outside
+    document.addEventListener('click', function(event) {
+      const assistant = document.getElementById('assistant');
+      const showButton = document.getElementById('show-assistant');
+      
+      if (!assistant.classList.contains('hidden') && 
+          !assistant.contains(event.target) && 
+          event.target !== showButton) {
+        toggleAssistant();
+      }
+    });
+  </script>
+</body>
+</html>
