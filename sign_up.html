@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukuru - Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        }
+
+        .orange-gradient {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
+        }
+
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .password-strength {
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak {
+            background-color: #ef4444;
+        }
+
+        .strength-medium {
+            background-color: #f59e0b;
+        }
+
+        .strength-strong {
+            background-color: #10b981;
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen flex items-center justify-center px-4 font-['Inter']">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-20 h-20 orange-gradient rounded-full opacity-20 floating-animation"></div>
+        <div class="absolute bottom-32 right-16 w-16 h-16 orange-gradient rounded-full opacity-15 floating-animation"
+            style="animation-delay: -2s;"></div>
+        <div class="absolute top-1/2 left-1/4 w-12 h-12 orange-gradient rounded-full opacity-10 floating-animation"
+            style="animation-delay: -4s;"></div>
+    </div>
+
+    <div class="slide-in w-full max-w-md">
+        <!-- Logo and Brand -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-24 h-24 mb-6 relative">
+                <div class="absolute inset-0 orange-gradient rounded-full opacity-20 blur-xl"></div>
+                <img src="https://pfst.cf2.poecdn.net/base/image/ad0f33a16cd958771525ec2ab716fcd651788af5c216639d9dfab5fe99f41b87?w=900&h=900"
+                    alt="Mukuru Logo" class="w-20 h-20 object-contain relative z-10 drop-shadow-2xl floating-animation">
+            </div>
+            <h1 class="text-4xl font-bold logo-text mb-2">Mukuru</h1>
+            <p class="text-gray-400 text-sm">Create your account to get started</p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl">
+            <form class="space-y-6" onsubmit="handleSignUp(event)">
+                <!-- Full Name Input -->
+                <div class="space-y-2">
+                    <label for="fullName" class="text-sm font-medium text-gray-300 block">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required
+                        class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 input-focus text-base"
+                        placeholder="Enter your full name">
+                </div>
+
+                <!-- Email Input -->
+                <div class="space-y-2">
+                    <label for="email" class="text-sm font-medium text-gray-300 block">Email Address</label>
+                    <input type="email" id="email" name="email" required
+                        class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 input-focus text-base"
+                        placeholder="your.email@example.com">
+                </div>
+
+                <!-- Phone Number Input -->
+                <div class="space-y-2">
+                    <label for="phone" class="text-sm font-medium text-gray-300 block">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required
+                        class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 input-focus text-base"
+                        placeholder="+27 (076) 123-4567">
+                </div>
+
+                <!-- Password Input -->
+                <div class="space-y-2">
+                    <label for="password" class="text-sm font-medium text-gray-300 block">Password</label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" required
+                            class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 input-focus text-base pr-12"
+                            placeholder="Create a strong password" oninput="checkPasswordStrength()">
+                        <button type="button" onclick="togglePassword('password')"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors">
+                            <svg id="eye-icon-password" class="w-5 h-5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Password Strength Indicator -->
+                    <div class="space-y-2">
+                        <div class="flex space-x-1">
+                            <div id="strength-bar-1" class="h-1 w-1/4 bg-gray-600 rounded-full password-strength"></div>
+                            <div id="strength-bar-2" class="h-1 w-1/4 bg-gray-600 rounded-full password-strength"></div>
+                            <div id="strength-bar-3" class="h-1 w-1/4 bg-gray-600 rounded-full password-strength"></div>
+                            <div id="strength-bar-4" class="h-1 w-1/4 bg-gray-600 rounded-full password-strength"></div>
+                        </div>
+                        <p id="password-strength-text" class="text-xs text-gray-400">Password strength will appear here
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Input -->
+                <div class="space-y-2">
+                    <label for="confirmPassword" class="text-sm font-medium text-gray-300 block">Confirm
+                        Password</label>
+                    <div class="relative">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                            class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 input-focus text-base pr-12"
+                            placeholder="Confirm your password" oninput="checkPasswordMatch()">
+                        <button type="button" onclick="togglePassword('confirmPassword')"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors">
+                            <svg id="eye-icon-confirm" class="w-5 h-5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p id="password-match-text" class="text-xs text-gray-400"></p>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="flex items-start space-x-3">
+                    <input type="checkbox" id="terms" required
+                        class="w-4 h-4 text-orange-500 bg-gray-900 border-gray-600 rounded focus:ring-orange-500 focus:ring-2 mt-1">
+                    <label for="terms" class="text-sm text-gray-300 leading-relaxed">
+                        I agree to the <a href="#" class="text-orange-500 hover:text-orange-400 transition-colors">Terms
+                            of Service</a> and
+                        <a href="#" class="text-orange-500 hover:text-orange-400 transition-colors">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <!-- Marketing Consent -->
+                <div class="flex items-start space-x-3">
+                    <input type="checkbox" id="marketing"
+                        class="w-4 h-4 text-orange-500 bg-gray-900 border-gray-600 rounded focus:ring-orange-500 focus:ring-2 mt-1">
+                    <label for="marketing" class="text-sm text-gray-300 leading-relaxed">
+                        I would like to receive updates about new features and promotions
+                    </label>
+                </div>
+
+                <!-- Sign Up Button -->
+                <button type="submit"
+                    class="w-full orange-gradient text-white font-semibold py-3 px-4 rounded-xl btn-hover focus:outline-none focus:ring-2 focus:ring-orange-500/20">
+                    Create Account
+                </button>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-700"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-transparent text-gray-400">Or sign up with</span>
+                    </div>
+                </div>
+
+                <!-- Social Sign Up Buttons -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button"
+                        class="flex items-center justify-center px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white hover:bg-gray-800/50 transition-all btn-hover"
+                        onclick="handleSocialSignUp('google')">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                            <path fill="currentColor"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                            <path fill="currentColor"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                            <path fill="currentColor"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        Google
+                    </button>
+                    <button type="button"
+                        class="flex items-center justify-center px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white hover:bg-gray-800/50 transition-all btn-hover"
+                        onclick="handleSocialSignUp('microsoft')">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z" />
+                        </svg>
+                        Microsoft
+                    </button>
+                </div>
+
+                <!-- Sign In Link -->
+                <div class="text-center pt-4">
+                    <p class="text-gray-400 text-sm">
+                        Already have an account?
+                        <a href="#" class="text-orange-500 hover:text-orange-400 font-medium transition-colors">Sign in
+                            here</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 text-gray-500 text-xs">
+            <p>&copy; 2024 Mukuru. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode support
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const eyeIcon = document.getElementById(`eye-icon-${fieldId === 'confirmPassword' ? 'confirm' : 'password'}`);
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                `;
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            }
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthBars = ['strength-bar-1', 'strength-bar-2', 'strength-bar-3', 'strength-bar-4'];
+            const strengthText = document.getElementById('password-strength-text');
+
+            // Reset all bars
+            strengthBars.forEach(bar => {
+                document.getElementById(bar).className = 'h-1 w-1/4 bg-gray-600 rounded-full password-strength';
+            });
+
+            if (password.length === 0) {
+                strengthText.textContent = 'Password strength will appear here';
+                strengthText.className = 'text-xs text-gray-400';
+                return;
+            }
+
+            let strength = 0;
+            let feedback = [];
+
+            // Length check
+            if (password.length >= 8) strength++;
+            else feedback.push('at least 8 characters');
+
+            // Uppercase check
+            if (/[A-Z]/.test(password)) strength++;
+            else feedback.push('uppercase letter');
+
+            // Lowercase check
+            if (/[a-z]/.test(password)) strength++;
+            else feedback.push('lowercase letter');
+
+            // Number or special character check
+            if (/[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password)) strength++;
+            else feedback.push('number or special character');
+
+            // Update strength bars
+            for (let i = 0; i < strength; i++) {
+                const bar = document.getElementById(strengthBars[i]);
+                if (strength <= 1) {
+                    bar.className = 'h-1 w-1/4 strength-weak rounded-full password-strength';
+                } else if (strength <= 2) {
+                    bar.className = 'h-1 w-1/4 strength-medium rounded-full password-strength';
+                } else {
+                    bar.className = 'h-1 w-1/4 strength-strong rounded-full password-strength';
+                }
+            }
+
+            // Update strength text
+            if (strength <= 1) {
+                strengthText.textContent = `Weak - Add ${feedback.join(', ')}`;
+                strengthText.className = 'text-xs text-red-400';
+            } else if (strength <= 2) {
+                strengthText.textContent = `Medium - Add ${feedback.join(', ')}`;
+                strengthText.className = 'text-xs text-yellow-400';
+            } else if (strength <= 3) {
+                strengthText.textContent = 'Good - Consider adding more complexity';
+                strengthText.className = 'text-xs text-orange-400';
+            } else {
+                strengthText.textContent = 'Strong password!';
+                strengthText.className = 'text-xs text-green-400';
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const matchText = document.getElementById('password-match-text');
+
+            if (confirmPassword.length === 0) {
+                matchText.textContent = '';
+                return;
+            }
+
+            if (password === confirmPassword) {
+                matchText.textContent = 'Passwords match ✓';
+                matchText.className = 'text-xs text-green-400';
+            } else {
+                matchText.textContent = 'Passwords do not match';
+                matchText.className = 'text-xs text-red-400';
+            }
+        }
+
+        function handleSignUp(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+
+            // Password validation
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showCustomAlert('Passwords do not match', 'error');
+                return;
+            }
+
+            if (password.length < 8) {
+                showCustomAlert('Password must be at least 8 characters long', 'error');
+                return;
+            }
+
+            // Terms validation
+            if (!document.getElementById('terms').checked) {
+                showCustomAlert('Please accept the Terms of Service and Privacy Policy', 'error');
+                return;
+            }
+
+            // Add loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating account...
+            `;
+            submitBtn.disabled = true;
+
+            // Simulate sign up process
+            setTimeout(() => {
+                showCustomAlert(`Account created successfully for ${data.email}! Please check your email to verify your account.`, 'success');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+
+                // Reset form
+                event.target.reset();
+                checkPasswordStrength();
+                checkPasswordMatch();
+            }, 2000);
+        }
+
+        function handleSocialSignUp(provider) {
+            showCustomAlert(`${provider.charAt(0).toUpperCase() + provider.slice(1)} sign up clicked`, 'info');
+        }
+
+        function showCustomAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg max-w-sm transform transition-all duration-300 translate-x-full`;
+
+            const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-orange-600';
+            alertDiv.className += ` ${bgColor} text-white`;
+
+            alertDiv.innerHTML = `
+                <div class="flex items-center">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">${message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => alertDiv.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                alertDiv.classList.add('translate-x-full');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>

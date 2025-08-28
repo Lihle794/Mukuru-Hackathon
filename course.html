@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukuru - Financial Literacy Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        }
+
+        .orange-gradient {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .option-hover {
+            transition: all 0.3s ease;
+        }
+
+        .option-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
+        }
+
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+
+        .correct-answer {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #059669;
+        }
+
+        .incorrect-answer {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #dc2626;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen px-4 font-['Inter']">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-20 h-20 orange-gradient rounded-full opacity-20 floating-animation"></div>
+        <div class="absolute bottom-32 right-16 w-16 h-16 orange-gradient rounded-full opacity-15 floating-animation"
+            style="animation-delay: -2s;"></div>
+        <div class="absolute top-1/2 left-1/4 w-12 h-12 orange-gradient rounded-full opacity-10 floating-animation"
+            style="animation-delay: -4s;"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="relative z-10 max-w-4xl mx-auto pt-8 pb-4">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <img src="https://pfst.cf2.poecdn.net/base/image/ad0f33a16cd958771525ec2ab716fcd651788af5c216639d9dfab5fe99f41b87?w=900&h=900"
+                    alt="Mukuru Logo" class="w-12 h-12 object-contain">
+                <div>
+                    <h1 class="text-2xl font-bold logo-text">Financial Literacy Quiz</h1>
+                    <p class="text-gray-400 text-sm">Learn and earn rewards</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-gray-400">Your Points</div>
+                <div id="user-points" class="text-2xl font-bold text-orange-500">250</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Container -->
+    <div class="relative z-10 max-w-4xl mx-auto pb-8">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="slide-in">
+            <div class="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl text-center">
+                <div class="mb-6">
+                    <div
+                        class="inline-flex items-center justify-center w-24 h-24 orange-gradient rounded-full mb-4 glow-effect">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white mb-4">Test Your Financial Knowledge</h2>
+                    <p class="text-gray-300 text-lg mb-6">Answer 10 questions correctly and earn points that you can
+                        redeem for rewards!</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div class="text-orange-500 text-2xl font-bold">10</div>
+                        <div class="text-gray-300 text-sm">Questions</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div class="text-orange-500 text-2xl font-bold">50</div>
+                        <div class="text-gray-300 text-sm">Points Max</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div class="text-orange-500 text-2xl font-bold">5</div>
+                        <div class="text-gray-300 text-sm">Minutes</div>
+                    </div>
+                </div>
+
+                <button onclick="startQuiz()"
+                    class="orange-gradient text-white font-semibold py-4 px-8 rounded-xl btn-hover focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-lg">
+                    Start Quiz
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <!-- Progress Bar -->
+            <div class="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50 shadow-2xl mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-300 text-sm">Progress</span>
+                    <span id="question-counter" class="text-orange-500 font-semibold">1 of 10</span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-3">
+                    <div id="progress-bar" class="orange-gradient h-3 rounded-full progress-bar" style="width: 10%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl">
+                <div class="mb-6">
+                    <h3 id="question-text" class="text-2xl font-bold text-white mb-4">Loading question...</h3>
+                    <div id="question-points"
+                        class="inline-flex items-center px-3 py-1 rounded-full bg-orange-500/20 text-orange-500 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        5 Points
+                    </div>
+                </div>
+
+                <div id="quiz-options" class="space-y-4 mb-8">
+                    <!-- Options will be inserted here -->
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <div id="timer" class="text-gray-400 text-sm">Time: 05:00</div>
+                    <button id="next-btn" onclick="nextQuestion()" disabled
+                        class="bg-gray-600 text-gray-400 px-6 py-3 rounded-xl cursor-not-allowed transition-all">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden slide-in">
+            <div class="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl text-center">
+                <div id="results-icon" class="mb-6">
+                    <!-- Icon will be inserted based on performance -->
+                </div>
+                <h2 id="results-title" class="text-3xl font-bold text-white mb-4">Quiz Complete!</h2>
+                <p id="results-message" class="text-gray-300 text-lg mb-6">Great job on completing the quiz!</p>
+
+                <div class="grid md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div id="final-score" class="text-orange-500 text-2xl font-bold">8/10</div>
+                        <div class="text-gray-300 text-sm">Correct Answers</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div id="points-earned" class="text-green-500 text-2xl font-bold">40</div>
+                        <div class="text-gray-300 text-sm">Points Earned</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div id="completion-time" class="text-blue-500 text-2xl font-bold">3:45</div>
+                        <div class="text-gray-300 text-sm">Completion Time</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="retakeQuiz()"
+                        class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-xl transition-all btn-hover">
+                        Retake Quiz
+                    </button>
+                    <button onclick="viewRewards()" class="orange-gradient text-white px-6 py-3 rounded-xl btn-hover">
+                        View Rewards
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode support
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Quiz Data
+        const quizQuestions = [
+            {
+                question: "What percentage of your income should ideally be saved each month?",
+                options: ["5%", "10-20%", "50%", "1%"],
+                correct: 1,
+                explanation: "Financial experts recommend saving 10-20% of your income each month for emergencies and future goals."
+            },
+            {
+                question: "What is compound interest?",
+                options: [
+                    "Interest paid only on the principal amount",
+                    "Interest earned on both principal and previously earned interest",
+                    "A type of bank fee",
+                    "Interest that decreases over time"
+                ],
+                correct: 1,
+                explanation: "Compound interest is interest calculated on the initial principal and accumulated interest from previous periods."
+            },
+            {
+                question: "How many months of expenses should you have in an emergency fund?",
+                options: ["1-2 months", "3-6 months", "12 months", "No emergency fund needed"],
+                correct: 1,
+                explanation: "Most financial advisors recommend having 3-6 months of living expenses saved for emergencies."
+            },
+            {
+                question: "What is a credit score?",
+                options: [
+                    "Your bank account balance",
+                    "A numerical representation of your creditworthiness",
+                    "The amount of money you owe",
+                    "Your monthly income"
+                ],
+                correct: 1,
+                explanation: "A credit score is a number that represents your creditworthiness based on your credit history."
+            },
+            {
+                question: "Which of these is considered a good debt?",
+                options: ["Credit card debt", "Mortgage", "Payday loans", "Car loan for luxury vehicle"],
+                correct: 1,
+                explanation: "A mortgage is generally considered good debt because it helps you build equity in an appreciating asset."
+            },
+            {
+                question: "What does diversification mean in investing?",
+                options: [
+                    "Putting all money in one stock",
+                    "Spreading investments across different asset types",
+                    "Only investing in your home country",
+                    "Avoiding all investments"
+                ],
+                correct: 1,
+                explanation: "Diversification means spreading your investments across different types of assets to reduce risk."
+            },
+            {
+                question: "What is inflation?",
+                options: [
+                    "When prices of goods and services decrease",
+                    "When prices of goods and services increase over time",
+                    "When interest rates go down",
+                    "When the stock market crashes"
+                ],
+                correct: 1,
+                explanation: "Inflation is the general increase in prices of goods and services over time, reducing purchasing power."
+            },
+            {
+                question: "What is the 50/30/20 budgeting rule?",
+                options: [
+                    "50% savings, 30% needs, 20% wants",
+                    "50% needs, 30% wants, 20% savings",
+                    "50% wants, 30% savings, 20% needs",
+                    "Equal spending on all categories"
+                ],
+                correct: 1,
+                explanation: "The 50/30/20 rule suggests spending 50% on needs, 30% on wants, and saving 20% of your income."
+            },
+            {
+                question: "What is the main purpose of insurance?",
+                options: [
+                    "To make money",
+                    "To protect against financial losses",
+                    "To pay taxes",
+                    "To increase credit score"
+                ],
+                correct: 1,
+                explanation: "Insurance is designed to protect you against financial losses from unexpected events."
+            },
+            {
+                question: "When should you start investing for retirement?",
+                options: [
+                    "At age 50",
+                    "As early as possible",
+                    "Only after paying off all debt",
+                    "Never, rely on government benefits"
+                ],
+                correct: 1,
+                explanation: "Starting to invest for retirement as early as possible allows compound interest to work in your favor."
+            }
+        ];
+
+        // Quiz State
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let timeLeft = 300; // 5 minutes
+        let timer;
+        let userPoints = 250; // Starting points
+
+        function startQuiz() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = [];
+            timeLeft = 300;
+
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function loadQuestion() {
+            const question = quizQuestions[currentQuestion];
+
+            document.getElementById('question-text').textContent = question.question;
+            document.getElementById('question-counter').textContent = `${currentQuestion + 1} of ${quizQuestions.length}`;
+
+            const progressPercent = ((currentQuestion + 1) / quizQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionButton = document.createElement('button');
+                optionButton.className = 'w-full text-left p-4 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white hover:border-orange-500 option-hover transition-all';
+                optionButton.textContent = option;
+                optionButton.onclick = () => selectAnswer(index, optionButton);
+                optionsContainer.appendChild(optionButton);
+            });
+
+            // Reset next button
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.className = 'bg-gray-600 text-gray-400 px-6 py-3 rounded-xl cursor-not-allowed transition-all';
+        }
+
+        function selectAnswer(selectedIndex, buttonElement) {
+            const question = quizQuestions[currentQuestion];
+            const allButtons = document.querySelectorAll('#quiz-options button');
+
+            // Remove previous selections
+            allButtons.forEach(btn => {
+                btn.className = 'w-full text-left p-4 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white option-hover transition-all';
+            });
+
+            // Show correct/incorrect
+            if (selectedIndex === question.correct) {
+                buttonElement.className = 'w-full text-left p-4 correct-answer text-white rounded-xl transition-all';
+                score++;
+            } else {
+                buttonElement.className = 'w-full text-left p-4 incorrect-answer text-white rounded-xl transition-all';
+                // Highlight correct answer
+                allButtons[question.correct].className = 'w-full text-left p-4 correct-answer text-white rounded-xl transition-all';
+            }
+
+            userAnswers.push(selectedIndex);
+
+            // Disable all buttons
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+            });
+
+            // Enable next button
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = false;
+            nextBtn.className = 'orange-gradient text-white px-6 py-3 rounded-xl btn-hover transition-all';
+            nextBtn.textContent = currentQuestion === quizQuestions.length - 1 ? 'Finish Quiz' : 'Next Question';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+
+            if (currentQuestion >= quizQuestions.length) {
+                endQuiz();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            const pointsEarned = score * 5;
+            userPoints += pointsEarned;
+
+            // Update user points display
+            document.getElementById('user-points').textContent = userPoints;
+
+            // Update results
+            document.getElementById('final-score').textContent = `${score}/${quizQuestions.length}`;
+            document.getElementById('points-earned').textContent = pointsEarned;
+
+            const completionTime = 300 - timeLeft;
+            const minutes = Math.floor(completionTime / 60);
+            const seconds = completionTime % 60;
+            document.getElementById('completion-time').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // Set results message and icon based on performance
+            const percentage = (score / quizQuestions.length) * 100;
+            const resultsIcon = document.getElementById('results-icon');
+            const resultsTitle = document.getElementById('results-title');
+            const resultsMessage = document.getElementById('results-message');
+
+            if (percentage >= 80) {
+                resultsIcon.innerHTML = `
+                    <div class="inline-flex items-center justify-center w-24 h-24 bg-green-600 rounded-full mb-4 glow-effect">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                `;
+                resultsTitle.textContent = 'Excellent Work!';
+                resultsMessage.textContent = 'You have excellent financial knowledge! Keep up the great work.';
+            } else if (percentage >= 60) {
+                resultsIcon.innerHTML = `
+                    <div class="inline-flex items-center justify-center w-24 h-24 orange-gradient rounded-full mb-4 glow-effect">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                `;
+                resultsTitle.textContent = 'Good Job!';
+                resultsMessage.textContent = 'You have good financial knowledge, but there\'s room for improvement.';
+            } else {
+                resultsIcon.innerHTML = `
+                    <div class="inline-flex items-center justify-center w-24 h-24 bg-blue-600 rounded-full mb-4 glow-effect">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                `;
+                resultsTitle.textContent = 'Keep Learning!';
+                resultsMessage.textContent = 'Consider reviewing financial literacy basics to improve your knowledge.';
+            }
+        }
+
+        function retakeQuiz() {
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+        }
+
+        function viewRewards() {
+            showCustomAlert('Rewards page coming soon! You can redeem your points for various benefits.', 'info');
+        }
+
+        function showCustomAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg max-w-sm transform transition-all duration-300 translate-x-full`;
+
+            const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-orange-600';
+            alertDiv.className += ` ${bgColor} text-white`;
+
+            alertDiv.innerHTML = `
+                <div class="flex items-center">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">${message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => alertDiv.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                alertDiv.classList.add('translate-x-full');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+
+</html>
