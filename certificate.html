@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukuru Educate - Certificate of Completion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        }
+
+        .certificate-container {
+            border: 5px solid #ff6b35;
+            border-radius: 16px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen flex items-center justify-center px-4 font-['Inter']">
+    <div class="certificate-container">
+        <img src="https://pfst.cf2.poecdn.net/base/image/ad0f33a16cd958771525ec2ab716fcd651788af5c216639d9dfab5fe99f41b87?w=900&h=900"
+            alt="Mukuru Logo" class="w-24 h-24 mx-auto mb-4">
+
+        <h1 class="text-4xl font-bold logo-text mb-4">Certificate of Completion</h1>
+        <p class="text-lg text-gray-700 mb-8">This certifies that</p>
+
+        <h2 id="student-name" class="text-3xl font-bold text-gray-800 mb-4">[Recipient Name]</h2>
+
+        <p class="text-lg text-gray-700 mb-8">has successfully completed the Mukuru Educate Certification Exam</p>
+
+        <p class="text-lg text-gray-700 mb-4">Date of Completion: <span id="completion-date">[Date]</span></p>
+
+    
+
+        <div class="mt-10">
+            <button onclick="window.print()" class="orange-gradient text-white font-semibold py-2 px-4 rounded-xl">
+                Print Certificate
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Set student name and score from session storage or defaults
+        document.getElementById('student-name').textContent = sessionStorage.getItem('student_name') || 'John Doe';
+        document.getElementById('final-score').textContent = sessionStorage.getItem('mukuru_quiz_score') || '0/0';
+        document.getElementById('completion-date').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+
+</html>

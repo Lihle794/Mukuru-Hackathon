@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukuru Educate - Certification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        .gradient-bg {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        }
+        .orange-gradient {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen flex flex-col items-center px-4 font-['Inter']">
+    <!-- Header -->
+    <div class="max-w-3xl mx-auto pt-8 pb-4 text-center">
+        <h1 class="text-4xl font-bold text-orange-400">Mukuru Educate 🎓</h1>
+        <p class="text-gray-400 text-lg">Earn your certification after completing 12 quizzes! 📝</p>
+    </div>
+
+    <!-- Certification Information -->
+    <div class="max-w-3xl mx-auto bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl text-center">
+        <h2 class="text-2xl font-bold text-white mb-4">Certification Overview</h2>
+        <p class="text-gray-300 mb-4">Mukuru Educate provides certification upon successful completion of a minimum of 12 quizzes. This certification is recognized by multiple financial advisor services. 🌟</p>
+        <p class="text-gray-300 mb-4">Prepare for a better financial future with our comprehensive quizzes and expert guidance. 💡</p>
+        <button onclick="checkCertificationEligibility()" class="orange-gradient text-white font-semibold py-3 px-6 rounded-xl btn-hover">
+            Check My Eligibility 
+        </button>
+        <div id="eligibility-message" class="mt-4 text-gray-300"></div>
+    </div>
+
+    <!-- Exam Section -->
+    <div class="max-w-3xl mx-auto bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl text-center mt-8">
+        <h2 class="text-2xl font-bold text-white mb-4">Certification Exam 🏆</h2>
+        <p class="text-gray-300 mb-4">To receive your certification, you must pass the Mukuru Educate exam. This exam tests your knowledge gained from the quizzes. 📚</p>
+        <button onclick="startExam()" class="orange-gradient text-white font-semibold py-3 px-6 rounded-xl btn-hover">
+            Start Exam 🚀
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-8 text-gray-500 text-xs">
+        <p>&copy; 2024 Mukuru. All rights reserved.</p>
+    </div>
+
+    <script>
+        function checkCertificationEligibility() {
+            const completedQuizzes = parseInt(sessionStorage.getItem('completed_quizzes')) || 0;
+
+            if (completedQuizzes >= 12) {
+                document.getElementById('eligibility-message').innerText = '🎉 Congratulations! You are eligible for certification!';
+            } else {
+                document.getElementById('eligibility-message').innerText = `⚠️ You need ${12 - completedQuizzes} more quizzes to be eligible for certification.`;
+            }
+        }
+
+        function startExam() {
+            // Redirect to the exam page (you can create this page separately)
+            window.location.href = "exam.html"; // Replace with your actual exam page
+        }
+    </script>
+</body>
+
+</html>

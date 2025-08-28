@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukuru - Certification Exam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        }
+
+        .orange-gradient {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .slide-in {
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .option-hover {
+            transition: all 0.3s ease;
+        }
+
+        .option-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
+        }
+
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .correct-answer {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #059669;
+        }
+
+        .incorrect-answer {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #dc2626;
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen px-4 font-['Inter']">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-20 h-20 orange-gradient rounded-full opacity-20"></div>
+        <div class="absolute bottom-32 right-16 w-16 h-16 orange-gradient rounded-full opacity-15"></div>
+        <div class="absolute top-1/2 left-1/4 w-12 h-12 orange-gradient rounded-full opacity-10"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="relative z-10 max-w-4xl mx-auto pt-8 pb-4">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <img src="https://pfst.cf2.poecdn.net/base/image/ad0f33a16cd958771525ec2ab716fcd651788af5c216639d9dfab5fe99f41b87?w=900&h=900"
+                    alt="Mukuru Logo" class="w-12 h-12 object-contain">
+                <div>
+                    <h1 class="text-2xl font-bold logo-text">Certification Exam</h1>
+                    <p class="text-gray-400 text-sm">Test Your Knowledge</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Container -->
+    <div class="relative z-10 max-w-4xl mx-auto pb-8">
+        <!-- Exam Screen -->
+        <div id="exam-screen" class="slide-in">
+            <div class="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl text-center">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold text-white mb-4">Mukuru Educate Exam</h2>
+                    <p class="text-gray-300 text-lg mb-6">Answer the following questions to complete your certification.</p>
+                </div>
+
+                <!-- Question Section -->
+                <div id="question-card" class="mb-6">
+                    <h3 id="question-text" class="text-2xl font-bold text-white mb-4">Loading question...</h3>
+                    <div id="question-options" class="space-y-4 mb-8">
+                        <!-- Options will be inserted here -->
+                    </div>
+                </div>
+
+                <button id="submit-btn" onclick="submitAnswer()"
+                    class="orange-gradient text-white font-semibold py-3 px-6 rounded-xl btn-hover">
+                    Submit Exam
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden slide-in">
+            <div class="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Exam Complete!</h2>
+                <p id="final-score" class="text-orange-500 text-2xl font-bold mb-4">Your Score: 0/0</p>
+                <button onclick="window.location.href='mukuru_educate.html'" class="orange-gradient text-white px-6 py-3 rounded-xl btn-hover">
+                    Back to Certification
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Example Question Data
+        const examQuestions = [
+            {
+                question: "What is the primary purpose of a budget?",
+                options: ["To save money", "To track expenses", "To plan for future spending", "All of the above"],
+                correct: 3,
+                explanation: "A budget helps you save money, track expenses, and plan for future spending."
+            },
+            {
+                question: "What is an emergency fund?",
+                options: ["Savings for vacations", "Money set aside for unexpected expenses", "A retirement account", "None of the above"],
+                correct: 1,
+                explanation: "An emergency fund is money set aside to cover unexpected expenses."
+            },
+            {
+                question: "Which of the following is a benefit of diversification in investing?",
+                options: ["Reduced risk", "Higher returns", "Guaranteed profits", "None of the above"],
+                correct: 0,
+                explanation: "Diversification helps reduce risk by spreading investments across different assets."
+            },
+            {
+                question: "What is a credit score?",
+                options: ["Your bank account balance", "A measure of your creditworthiness", "The amount of money you owe", "Your total income"],
+                correct: 1,
+                explanation: "A credit score is a numerical representation of your creditworthiness based on your credit history."
+            },
+            {
+                question: "What does inflation refer to?",
+                options: ["A decrease in prices", "An increase in prices", "Stability in prices", "None of the above"],
+                correct: 1,
+                explanation: "Inflation refers to the general increase in prices of goods and services over time."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const question = examQuestions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = question.question;
+
+            const optionsContainer = document.getElementById('question-options');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionButton = document.createElement('button');
+                optionButton.className = 'w-full text-left p-4 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white hover:border-orange-500 option-hover transition-all';
+                optionButton.textContent = option;
+                optionButton.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionButton);
+            });
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = examQuestions[currentQuestionIndex];
+
+            if (selectedIndex === question.correct) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < examQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+    document.getElementById('exam-screen').classList.add('hidden');
+    document.getElementById('results-screen').classList.remove('hidden');
+    document.getElementById('final-score').textContent = `Your Score: ${score}/${examQuestions.length}`;
+
+    // Check if the score qualifies for a certificate (assuming passing score is 3 or more)
+    if (score >= 3) {
+        // Store the student's name and score in session storage
+        sessionStorage.setItem('student_name', prompt("Please enter your name:"));
+        sessionStorage.setItem('mukuru_quiz_score', `${score}/${examQuestions.length}`);
+        
+        // Redirect to the certificate page after a short delay
+        setTimeout(() => {
+            window.location.href = 'certificate.html';
+        }, 3000); // Redirects after 3 seconds
+    }
+}
+        // Load the first question on page load
+        window.addEventListener('load', loadQuestion);
+    </script>
+</body>
+
+</html>
