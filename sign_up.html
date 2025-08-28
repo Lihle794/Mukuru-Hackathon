@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mukuru - Sign Up</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- STEP 1: Add Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.5.1/dist/axios.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -443,6 +446,29 @@
                 checkPasswordStrength();
                 checkPasswordMatch();
             }, 2000);
+
+            <!-- Url on which the API is hosted on -->
+
+            const apiUrl = 'http://localhost:8080/signup'; 
+
+             
+            axios.post(apiUrl, data)
+                .then(response => {
+                    showCustomAlert(`Account created successfully for ${data.email}!`, 'success');
+                    event.target.reset();
+                    checkPasswordStrength();
+                    checkPasswordMatch();
+                })
+                .catch(error => {
+                    console.error(error);
+                    showCustomAlert(error.response?.data?.message || 'Something went wrong', 'error');
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+
+
         }
 
         function handleSocialSignUp(provider) {
