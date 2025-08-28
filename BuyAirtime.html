@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy Airtime</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center px-4 font-['Inter']">
+  <div class="w-full max-w-md bg-white/90 rounded-3xl p-8 border border-gray-800/50 shadow-2xl mt-12">
+    <h2 class="text-2xl font-bold text-orange-500 mb-6 text-center">Buy Airtime</h2>
+    <form class="space-y-6">
+      <div>
+        <label class="block text-gray-700 mb-2" for="airtimeAmount">Amount</label>
+        <input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-orange-500" type="number" id="airtimeAmount" name="airtimeAmount" placeholder="Enter amount (e.g. 50)" required>
+      </div>
+      <button type="submit" class="w-full orange-gradient text-white font-semibold py-3 px-4 rounded-xl btn-hover focus:outline-none focus:ring-2 focus:ring-orange-500/20">Buy Airtime</button>
+    </form>
+    <div class="mt-6 text-center text-gray-700">
+      <div class="font-semibold text-orange-500 mb-2">Points Info</div>
+      <div>Buy R50 = 10 points<br>Buy R100 = 20 points<br>Buy R200 = 40 points</div>
+    </div>
+    <div class="text-center pt-4">
+      <a href="HomePage.html" class="text-orange-500 hover:text-orange-400 font-medium transition-colors">Back to Home</a>
+    </div>
+  </div>
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+    }
+    .orange-gradient {
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+    }
+    .btn-hover {
+      transition: all 0.3s ease;
+    }
+    .btn-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+    }
+  </style>
+</body>
+</html>
