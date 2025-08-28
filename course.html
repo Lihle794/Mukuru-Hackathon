@@ -155,6 +155,11 @@
                     <h2 class="text-3xl font-bold text-white mb-4">Test Your Financial Knowledge</h2>
                     <p class="text-gray-300 text-lg mb-6">Answer 10 questions correctly and earn points that you can
                         redeem for rewards!</p>
+                    <div id="quiz-taken-warning"
+                        class="hidden mb-4 p-4 bg-yellow-600/20 border border-yellow-600/30 rounded-xl">
+                        <p class="text-yellow-400 text-sm">⚠️ You have already completed this quiz. Each user can only
+                            take the quiz once.</p>
+                    </div>
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-4 mb-8">
@@ -163,7 +168,7 @@
                         <div class="text-gray-300 text-sm">Questions</div>
                     </div>
                     <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
-                        <div class="text-orange-500 text-2xl font-bold">50</div>
+                        <div class="text-orange-500 text-2xl font-bold">20</div>
                         <div class="text-gray-300 text-sm">Points Max</div>
                     </div>
                     <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
@@ -172,7 +177,7 @@
                     </div>
                 </div>
 
-                <button onclick="startQuiz()"
+                <button id="start-quiz-btn" onclick="startQuiz()"
                     class="orange-gradient text-white font-semibold py-4 px-8 rounded-xl btn-hover focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-lg">
                     Start Quiz
                 </button>
@@ -203,7 +208,7 @@
                             <path
                                 d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                         </svg>
-                        5 Points
+                        2 Points
                     </div>
                 </div>
 
@@ -236,7 +241,7 @@
                         <div class="text-gray-300 text-sm">Correct Answers</div>
                     </div>
                     <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
-                        <div id="points-earned" class="text-green-500 text-2xl font-bold">40</div>
+                        <div id="points-earned" class="text-green-500 text-2xl font-bold">16</div>
                         <div class="text-gray-300 text-sm">Points Earned</div>
                     </div>
                     <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
@@ -245,15 +250,48 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button onclick="retakeQuiz()"
-                        class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-xl transition-all btn-hover">
-                        Retake Quiz
-                    </button>
+                <div class="mb-6 p-4 bg-orange-500/20 border border-orange-500/30 rounded-xl">
+                    <p class="text-orange-400 text-sm">✓ Quiz completed! You cannot retake this quiz as each user is
+                        limited to one attempt.</p>
+                </div>
+
+                <div class="flex justify-center">
                     <button onclick="viewRewards()" class="orange-gradient text-white px-6 py-3 rounded-xl btn-hover">
                         View Rewards
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Already Completed Screen -->
+        <div id="completed-screen" class="hidden slide-in">
+            <div class="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl text-center">
+                <div class="mb-6">
+                    <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-600 rounded-full mb-4">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white mb-4">Quiz Already Completed</h2>
+                    <p class="text-gray-300 text-lg mb-6">You have already taken this quiz and earned your points. Each
+                        user can only complete the quiz once.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div id="previous-score" class="text-orange-500 text-2xl font-bold">-</div>
+                        <div class="text-gray-300 text-sm">Your Score</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                        <div id="previous-points" class="text-green-500 text-2xl font-bold">-</div>
+                        <div class="text-gray-300 text-sm">Points Earned</div>
+                    </div>
+                </div>
+
+                <button onclick="viewRewards()" class="orange-gradient text-white px-6 py-3 rounded-xl btn-hover">
+                    View Rewards
+                </button>
             </div>
         </div>
     </div>
@@ -377,8 +415,43 @@
         let timeLeft = 300; // 5 minutes
         let timer;
         let userPoints = 250; // Starting points
+        let quizCompleted = false; // Track if quiz has been completed
+
+        // Check if quiz has been completed before (simulate with sessionStorage)
+        function checkQuizStatus() {
+            const completed = sessionStorage.getItem('mukuru_quiz_completed');
+            if (completed) {
+                quizCompleted = true;
+                const savedScore = sessionStorage.getItem('mukuru_quiz_score');
+                const savedPoints = sessionStorage.getItem('mukuru_quiz_points');
+
+                // Show already completed screen
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('completed-screen').classList.remove('hidden');
+
+                if (savedScore) {
+                    document.getElementById('previous-score').textContent = savedScore;
+                }
+                if (savedPoints) {
+                    document.getElementById('previous-points').textContent = savedPoints;
+                }
+
+                // Update user points
+                const totalPoints = parseInt(sessionStorage.getItem('mukuru_total_points')) || 250;
+                userPoints = totalPoints;
+                document.getElementById('user-points').textContent = userPoints;
+
+                return true;
+            }
+            return false;
+        }
 
         function startQuiz() {
+            if (quizCompleted) {
+                showCustomAlert('You have already completed this quiz. Each user can only take it once.', 'error');
+                return;
+            }
+
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
 
@@ -485,8 +558,16 @@
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('results-screen').classList.remove('hidden');
 
-            const pointsEarned = score * 5;
+            // Calculate points (2 points per correct answer)
+            const pointsEarned = score * 2;
             userPoints += pointsEarned;
+
+            // Mark quiz as completed
+            quizCompleted = true;
+            sessionStorage.setItem('mukuru_quiz_completed', 'true');
+            sessionStorage.setItem('mukuru_quiz_score', `${score}/${quizQuestions.length}`);
+            sessionStorage.setItem('mukuru_quiz_points', pointsEarned);
+            sessionStorage.setItem('mukuru_total_points', userPoints);
 
             // Update user points display
             document.getElementById('user-points').textContent = userPoints;
@@ -539,11 +620,6 @@
             }
         }
 
-        function retakeQuiz() {
-            document.getElementById('results-screen').classList.add('hidden');
-            document.getElementById('welcome-screen').classList.remove('hidden');
-        }
-
         function viewRewards() {
             showCustomAlert('Rewards page coming soon! You can redeem your points for various benefits.', 'info');
         }
@@ -576,6 +652,11 @@
                 setTimeout(() => alertDiv.remove(), 300);
             }, 4000);
         }
+
+        // Initialize quiz status check on page load
+        window.addEventListener('load', function () {
+            checkQuizStatus();
+        });
     </script>
 </body>
 
