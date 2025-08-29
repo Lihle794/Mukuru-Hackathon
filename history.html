@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mukuru - Transaction History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+      color: #ffffff;
+      min-height: 100vh;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+    }
+    
+    .orange-gradient {
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+    }
+    
+    .logo-text {
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .transaction-card {
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .transaction-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid #f97316;
+    }
+    
+    .credit {
+      color: #10b981;
+    }
+    
+    .debit {
+      color: #ef4444;
+    }
+    
+    .floating-animation {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .slide-in {
+      animation: slideIn 0.8s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.3s ease;
+    }
+    
+    .alert.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .alert.success {
+      background-color: #10b981;
+    }
+    
+    .alert.error {
+      background-color: #ef4444;
+    }
+    
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 3px solid #ff6b35;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="p-4 md:p-6">
+  <!-- Background design -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-20 left-10 w-20 h-20 orange-gradient rounded-full opacity-20 floating-animation"></div>
+    <div class="absolute bottom-32 right-16 w-16 h-16 orange-gradient rounded-full opacity-15 floating-animation" style="animation-delay: -2s;"></div>
+    <div class="absolute top-1/2 left-1/4 w-12 h-12 orange-gradient rounded-full opacity-10 floating-animation" style="animation-delay: -4s;"></div>
+  </div>
+
+  <!-- Alert container -->
+  <div id="alertContainer"></div>
+
+  <div class="max-w-2xl mx-auto bg-black/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-800/50 shadow-2xl slide-in">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Transaction History</h1>
+        <p class="text-gray-400">Your recent transactions</p>
+      </div>
+      <div class="bg-orange-500/20 p-2 rounded-full">
+        <i class="fas fa-receipt text-orange-400 text-xl"></i>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="bg-gray-900/50 p-5 rounded-xl border border-gray-800 mb-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-gray-400 text-sm">Current Balance</p>
+          <p id="curr_balance" class="text-2xl font-bold text-white">Loading...</p>
+        </div>
+        <div class="text-right">
+          <p class="text-gray-400 text-sm">Account Number</p>
+          <p class="font-mono text-white">XXXX-XXXX-XXXX-4323</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-3 mb-6">
+      <button class="px-4 py-2 rounded-full orange-gradient text-white text-sm font-medium" data-filter="all">
+        All Transactions
+      </button>
+      <button class="px-4 py-2 rounded-full bg-gray-800 text-gray-300 text-sm font-medium hover:bg-gray-700" data-filter="credit">
+        Credits
+      </button>
+      <button class="px-4 py-2 rounded-full bg-gray-800 text-gray-300 text-sm font-medium hover:bg-gray-700" data-filter="debit">
+        Debits
+      </button>
+      <div class="ml-auto">
+        <select id="monthFilter" class="px-4 py-2 rounded-full bg-gray-800 text-gray-300 text-sm font-medium">
+          <option value="all">All Time</option>
+          <option value="8">August 2025</option>
+          <option value="7">July 2025</option>
+          <option value="6">June 2025</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Transactions Container -->
+    <div id="transactionsContainer" class="divide-y divide-gray-800">
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="pt-6 flex justify-between items-center">
+      <button class="px-4 py-2 rounded-lg bg-gray-800 text-gray-300 text-sm font-medium hover:bg-gray-700">
+        <i class="fas fa-download mr-2"></i> Export
+      </button>
+      <div id="transactionCount" class="text-sm text-gray-500">
+        Loading transactions...
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Button -->
+  <div class="max-w-2xl mx-auto mt-6">
+    <a href="#" class="orange-gradient text-white px-6 py-3 rounded-xl font-semibold shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 flex items-center justify-center">
+      <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <script>
+    // Custom alert function
+    function showCustomAlert(message, type) {
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert ${type}`;
+      alert.innerHTML = `
+        <div class="flex items-center">
+          <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      alertContainer.appendChild(alert);
+      
+      // Show alert
+      setTimeout(() => {
+        alert.classList.add('show');
+      }, 10);
+      
+      // Hide alert after 5 seconds
+      setTimeout(() => {
+        alert.classList.remove('show');
+        setTimeout(() => {
+          alertContainer.removeChild(alert);
+        }, 300);
+      }, 5000);
+    }
+
+    // Format currency
+    function formatCurrency(amount) {
+      return 'ZAR ' + parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+
+    // Format timestamp to readable date
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString('en-US', { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+      });
+    }
+
+    // Get transaction icon based on type
+    function getTransactionIcon(type) {
+      const icons = {
+        'electricity': 'fa-bolt',
+        'transfer': 'fa-exchange-alt',
+        'card': 'fa-credit-card',
+        'subscription': 'fa-tv',
+        'airtime': 'fa-mobile-alt',
+        'default': 'fa-receipt'
+      };
+      
+      return icons[type] || icons.default;
+    }
+
+    // Get transaction color based on type
+    function getTransactionColor(type) {
+      const colors = {
+        'electricity': 'orange',
+        'transfer': 'blue',
+        'card': 'red',
+        'subscription': 'purple',
+        'airtime': 'green',
+        'default': 'gray'
+      };
+      
+      return colors[type] || colors.default;
+    }
+
+    // Fetch transactions from backend
+    function fetchTransactions() {
+      const apiUrl = 'http://localhost:8080/transaction/send';
+      
+      axios.get(apiUrl)
+        .then(response => {
+          const transactions = response.data.transactions || [];
+          const balance = response.data.balance || 0;
+          
+          // Update balance
+          document.getElementById('curr_balance').textContent = formatCurrency(balance);
+          
+          // Render transactions
+          renderTransactions(transactions);
+          
+          // Update transaction count
+          document.getElementById('transactionCount').textContent = 
+            `Showing ${transactions.length} of ${transactions.length} transactions`;
+        })
+        .catch(error => {
+          console.error('Error fetching transactions:', error);
+          showCustomAlert('Failed to load transactions. Please try again.', 'error');
+          
+          document.getElementById('transactionsContainer').innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <i class="fas fa-exclamation-circle text-2xl mb-2"></i>
+              <p>Unable to load transactions</p>
+            </div>
+          `;
+        });
+    }
+
+    // Render transactions to the DOM
+    function renderTransactions(transactions) {
+      const container = document.getElementById('transactionsContainer');
+      
+      if (transactions.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-400">
+            <i class="fas fa-receipt text-2xl mb-2"></i>
+            <p>No transactions found</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '';
+      
+      // Group transactions by year
+      const transactionsByYear = {};
+      transactions.forEach(transaction => {
+        const year = new Date(transaction.timestamp).getFullYear();
+        if (!transactionsByYear[year]) {
+          transactionsByYear[year] = [];
+        }
+        transactionsByYear[year].push(transaction);
+      });
+      
+      // Generate HTML for each year
+      Object.keys(transactionsByYear).sort().reverse().forEach(year => {
+        html += `
+          <div class="py-4">
+            <h2 class="text-lg font-semibold text-orange-400">${year}</h2>
+          </div>
+        `;
+        
+        transactionsByYear[year].forEach(transaction => {
+          const isCredit = transaction.amount > 0;
+          const amountClass = isCredit ? 'credit' : 'debit';
+          const amountSign = isCredit ? '+' : '-';
+          const absoluteAmount = Math.abs(transaction.amount);
+          
+          html += `
+            <div class="transaction-card py-5">
+              <div class="flex justify-between items-start">
+                <div class="flex items-start space-x-3">
+                  <div class="w-10 h-10 rounded-full bg-${getTransactionColor(transaction.type)}-500/20 flex items-center justify-center">
+                    <i class="fas ${getTransactionIcon(transaction.type)} text-${getTransactionColor(transaction.type)}-400"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-white">${transaction.description}</h3>
+                    ${transaction.recipient_name ? `<p class="text-sm text-gray-400">To: ${transaction.recipient_name}</p>` : ''}
+                    ${transaction.sender_name ? `<p class="text-sm text-gray-400">From: ${transaction.sender_name}</p>` : ''}
+                    <p class="text-xs text-gray-500 mt-1">${formatDate(transaction.timestamp)}</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="${amountClass} font-semibold">${amountSign} ZAR ${absoluteAmount.toFixed(2)}</p>
+                  <p class="text-xs text-gray-400">${transaction.status || 'Completed'}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      });
+      
+      container.innerHTML = html;
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Fetch transactions when page loads
+      fetchTransactions();
+      
+      // Filter functionality
+      const filterButtons = document.querySelectorAll('[data-filter]');
+      const monthFilter = document.getElementById('monthFilter');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const filter = this.getAttribute('data-filter');
+          
+          // Remove active class from all buttons
+          filterButtons.forEach(btn => {
+            btn.classList.remove('orange-gradient', 'text-white');
+            btn.classList.add('bg-gray-800', 'text-gray-300');
+          });
+          
+          // Add active class to clicked button
+          this.classList.remove('bg-gray-800', 'text-gray-300');
+          this.classList.add('orange-gradient', 'text-white');
+          
+          // Apply filter (you would implement actual filtering logic here)
+          showCustomAlert(`Filtering by: ${filter}`, 'success');
+        });
+      });
+      
+      // Month filter change
+      monthFilter.addEventListener('change', function() {
+        const month = this.value;
+        showCustomAlert(`Filtering by month: ${this.options[this.selectedIndex].text}`, 'success');
+      });
+    });
+  </script>
+</body>
+</html>
