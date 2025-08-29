@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mukuru - Rewards Program</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -290,6 +291,136 @@
         </div>
     </div>
 
+    <!-- Seasonal Rewards -->
+    <div class="relative z-10 max-w-7xl mx-auto mb-12">
+        <h2 class="text-3xl font-bold text-white text-center mb-8">Seasonal Rewards</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Women's Day Reward -->
+            <div
+                class="reward-card bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50 shadow-xl opacity-60">
+                <div class="text-4xl mb-3">🌸</div>
+                <h4 class="text-lg font-semibold text-white mb-2">Women's Day Gift</h4>
+                <p class="text-gray-400 text-sm mb-4">Special gift for Women's Day</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-orange-500 font-bold">300 Points</span>
+                    <button disabled class="bg-gray-600 text-gray-400 px-4 py-2 rounded-lg text-sm cursor-not-allowed">
+                        Locked
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Father's Day Reward -->
+            <div
+                class="reward-card bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50 shadow-xl opacity-60">
+                <div class="text-4xl mb-3">👔</div>
+                <h4 class="text-lg font-semibold text-white mb-2">Father's Day Voucher</h4>
+                <p class="text-gray-400 text-sm mb-4">R100 voucher for dad's favorite store</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-orange-500 font-bold">250 Points</span>
+                    <button disabled class="bg-gray-600 text-gray-400 px-4 py-2 rounded-lg text-sm cursor-not-allowed">
+                        Locked
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Christmas Reward -->
+            <div
+                class="reward-card bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50 shadow-xl opacity-60">
+                <div class="text-4xl mb-3">🎄</div>
+                <h4 class="text-lg font-semibold text-white mb-2">Christmas Surprise</h4>
+                <p class="text-gray-400 text-sm mb-4">Exciting gift for the festive season</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-orange-500 font-bold">500 Points</span>
+                    <button disabled class="bg-gray-600 text-gray-400 px-4 py-2 rounded-lg text-sm cursor-not-allowed">
+                        Locked
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Easter Reward -->
+            <div
+                class="reward-card bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50 shadow-xl opacity-60">
+                <div class="text-4xl mb-3">🐰</div>
+                <h4 class="text-lg font-semibold text-white mb-2">Easter Treat</h4>
+                <p class="text-gray-400 text-sm mb-4">Special Easter goodies</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-orange-500 font-bold">350 Points</span>
+                    <button disabled class="bg-gray-600 text-gray-400 px-4 py-2 rounded-lg text-sm cursor-not-allowed">
+                        Locked
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mystery Reward -->
+    <div class="relative z-10 max-w-7xl mx-auto mb-12">
+        <h2 class="text-3xl font-bold text-white text-center mb-8">Mystery Reward</h2>
+        <div class="reward-card bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50 shadow-xl">
+            <div class="text-4xl mb-3">🎁</div>
+            <h4 class="text-lg font-semibold text-white mb-2">Your Personalized Mystery Reward!</h4>
+            <p class="text-gray-400 text-sm mb-4" id="mystery-reward-message">Based on your spending habits, you have
+                unlocked a special mystery reward just for you!</p>
+            <div class="flex items-center justify-between">
+                <span class="text-orange-500 font-bold" id="points-required">Points Required: Unknown</span>
+                <button onclick="redeemMysteryReward()"
+                    class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm btn-hover">
+                    Reveal Reward
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function redeemMysteryReward() {
+            const rewards = [
+                { name: "Free Coffee Voucher", points: 50 },
+                { name: "R100 Grocery Voucher", points: 100 },
+                { name: "Movie Ticket", points: 150 },
+                { name: "R200 Airtime Voucher", points: 200 },
+                { name: "Special Discount on Next Purchase", points: 300 }
+            ];
+
+            // Simulate selecting a random reward
+            const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
+
+            // Display the reward
+            const rewardMessage = `Congratulations! You've unlocked: ${randomReward.name} for ${randomReward.points} points!`;
+            document.getElementById('mystery-reward-message').textContent = rewardMessage;
+            document.getElementById('points-required').textContent = `Points Required: ${randomReward.points}`;
+
+            // Trigger confetti animation
+            launchConfetti();
+
+            // Show alert
+            showCustomAlert(rewardMessage, 'success');
+        }
+
+        function launchConfetti() {
+            const duration = 0.5 * 1000; // 2 seconds
+            const end = Date.now() + duration;
+
+            (function frame() {
+                // Launch confetti
+                confetti({
+                    particleCount: 100,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                });
+                confetti({
+                    particleCount: 100,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+    </script>
     <!-- Available Rewards -->
     <div class="relative z-10 max-w-7xl mx-auto mb-12">
         <h2 class="text-3xl font-bold text-white text-center mb-8">Available Rewards</h2>
@@ -536,27 +667,36 @@
         });
 
         // Get user points from previous interactions (simulated)
-        let userPoints = parseInt(sessionStorage.getItem('mukuru_total_points')) || 270;
-        document.getElementById('user-points').textContent = userPoints;
+         let userPoints = parseInt(sessionStorage.getItem('mukuru_total_points')) || 270;
+            let availableRewards = 500; // Set the initial available rewards
+
+            function updateProgressAndRewards() {
+                document.getElementById('user-points').textContent = userPoints;
+
+                // Update the progress to Silver
+                const progressBar = document.querySelector('.progress-bar');
+                let percentage = (userPoints / availableRewards) * 100;
+
+                progressBar.style.width = `${Math.min(percentage, 100)}%`;
+                document.querySelector('.text-xs.text-gray-400').textContent = `${userPoints} / ${availableRewards} points`;
+            }
 
         function redeemReward(rewardName, pointsCost) {
-            if (userPoints >= pointsCost) {
-                showConfirmDialog(
-                    `Are you sure you want to redeem "${rewardName}" for ${pointsCost} points?`,
-                    () => {
-                        userPoints -= pointsCost;
-                        document.getElementById('user-points').textContent = userPoints;
-                        sessionStorage.setItem('mukuru_total_points', userPoints);
-                        showCustomAlert(`Successfully redeemed ${rewardName}! You'll receive instructions via email.`, 'success');
-
-                        // Update progress bar if needed
-                        updateTierProgress();
-                    }
-                );
-            } else {
-                showCustomAlert(`You need ${pointsCost - userPoints} more points to redeem this reward.`, 'error');
+                if (userPoints >= pointsCost) {
+                    userPoints -= pointsCost;
+                    // Update available rewards based on points spent
+                    availableRewards = 500; // Adjust this value as needed
+                    updateProgressAndRewards();
+                    showCustomAlert(`Successfully redeemed ${rewardName}!`, 'success');
+                } else {
+                    showCustomAlert(`You need ${pointsCost - userPoints} more points to redeem this reward.`, 'error');
+                }
             }
-        }
+
+            // Call this function to initialize values on page load
+            window.addEventListener('load', function () {
+                updateProgressAndRewards();
+            });
 
         function updateTierProgress() {
             const progressBar = document.querySelector('.progress-bar');
