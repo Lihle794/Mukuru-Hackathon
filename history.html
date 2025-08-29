@@ -118,44 +118,66 @@
   </div>
 
   <script>
-    // Mock transaction data
-    const transactions = [
-      {
-        recipient_name: "Naledi Khumalo",
-        amount: 1500.0,
-        credit: 0.0,
-        debit: 2050.0,
-        prev_balance: 5000.45,
-        curr_balance: 2950.45
-      },
-      // Add more mock data as needed
-    ];
+    const apiUrl = 'http://localhost:8080/transaction/history'; // Your endpoint
 
-    // Function to render transactions in the table
-    function renderTransactions() {
+    function renderTransaction(transaction) {
       const tableBody = document.getElementById('transactionTableBody');
-      tableBody.innerHTML = ''; // Clear existing data
+      tableBody.innerHTML = ''; // Clear existing content
 
-      transactions.forEach(transaction => {
-        const row = document.createElement('tr');
-        row.className = 'hover:bg-gray-800 transition-colors';
+      const row = document.createElement('tr');
+      row.className = 'hover:bg-gray-800 transition-colors';
 
-        row.innerHTML = `
-          <td class="py-2 px-4 border-b border-gray-800">${transaction.recipient_name}</td>
-          <td class="py-2 px-4 border-b border-gray-800">${transaction.amount.toFixed(2)}</td>
-          <td class="py-2 px-4 border-b border-gray-800 ${transaction.credit > 0 ? 'credit' : ''}">${transaction.credit.toFixed(2)}</td>
-          <td class="py-2 px-4 border-b border-gray-800 ${transaction.debit > 0 ? 'debit' : ''}">${transaction.debit.toFixed(2)}</td>
-          <td class="py-2 px-4 border-b border-gray-800">${transaction.prev_balance.toFixed(2)}</td>
-          <td class="py-2 px-4 border-b border-gray-800">${transaction.curr_balance.toFixed(2)}</td>
-        `;
+      // Use 0 as fallback if any numeric value is missing
+      const amount = transaction.amount ?? 0;
+      const credit = transaction.credit ?? 0;
+      const debit = transaction.debit ?? 0;
+      const prev_balance = transaction.prev_balance ?? 0;
+      const curr_balance = transaction.curr_balance ?? 0;
 
-        tableBody.appendChild(row);
-      });
+      row.innerHTML = `
+        <td class="py-2 px-4 border-b border-gray-800">${transaction.recepient_name || 'N/A'}</td>
+        <td class="py-2 px-4 border-b border-gray-800">${amount.toFixed(2)}</td>
+        <td class="py-2 px-4 border-b border-gray-800 ${credit > 0 ? 'credit' : ''}">${credit.toFixed(2)}</td>
+        <td class="py-2 px-4 border-b border-gray-800 ${debit > 0 ? 'debit' : ''}">${debit.toFixed(2)}</td>
+        <td class="py-2 px-4 border-b border-gray-800">${prev_balance.toFixed(2)}</td>
+        <td class="py-2 px-4 border-b border-gray-800">${curr_balance.toFixed(2)}</td>
+      `;
+
+      tableBody.appendChild(row);
     }
 
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', renderTransactions);
+    function fetchTransaction() {
+      const tableBody = document.getElementById('transactionTableBody');
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="loading">
+            <div class="spinner"></div>
+          </td>
+        </tr>
+      `;
+
+      axios.get(apiUrl)
+        .then(response => {
+          const transaction = response.data; // One object
+          renderTransaction(transaction);
+        })
+        .catch(error => {
+          console.error(error);
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="text-center text-red-500 py-4">
+                Failed to load transaction.
+              </td>
+            </tr>
+          `;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchTransaction);
   </script>
+
+
+
 </body>
 
 </html>
