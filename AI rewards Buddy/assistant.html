@@ -120,7 +120,7 @@
     <!-- Chat Messages - Changed to dark gray -->
     <div id="chat-box"
          class="chat-container flex-1 p-4 space-y-3 text-sm bg-gray-800">
-      <div class="bg-gray-700 p-3 rounded-lg max-w-[85%] fade-in">
+      <div class="bg-gray-900 p-3 rounded-lg max-w-[85%] fade-in">
         <p>Hello! 👋 I'm your Mukuru Rewards Assistant.</p>
         <p class="mt-2">I can help you understand our rewards system. Ask me about:</p>
         <ul class="list-disc list-inside mt-2 ml-2 text-orange-300">
@@ -213,7 +213,7 @@
       const chatBox = document.getElementById("chat-box");
       const typingIndicator = document.createElement("div");
       typingIndicator.id = "typing-indicator";
-      typingIndicator.className = "bg-gray-700 p-2 rounded-lg max-w-[30%]";
+      typingIndicator.className = "bg-gray-900 p-2 rounded-lg max-w-[30%]";
       typingIndicator.innerHTML = `
         <div class="flex items-center">
           <div class="typing-indicator"></div>
@@ -263,7 +263,7 @@
         
         // Create AI message
         const aiMsg = document.createElement("div");
-        aiMsg.className = "bg-gray-700 p-3 rounded-lg max-w-[85%] fade-in";
+        aiMsg.className = "bg-gray-900 p-3 rounded-lg max-w-[85%] fade-in";
         aiMsg.innerHTML = aiResponse;
         
         chatBox.appendChild(aiMsg);
